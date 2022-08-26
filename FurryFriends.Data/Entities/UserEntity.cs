@@ -22,16 +22,43 @@ namespace FurryFriends.Data.Entities
         public string Breed { get; set; }
         public string Bio { get; set; }
         public string Size { get; set; }
-        public string City { get; set; }
 
-        [EnumDataType(typeof(PetTypes))]
-        public PetTypes PetTypeEnum { get; set; }
+         [Required]
+    public virtual int CityID
+    {
+        get
+        {
+            return (int)this.CityName;
+        }
+        set
+        {
+            CityName = (CityNames)value;
+        }
+    }
+    [EnumDataType(typeof(CityNames))]
+    public CityNames CityName{ get; set;}
+
+    [EnumDataType(typeof(PetTypes))]
+    public PetTypes PetTypeEnum { get; set; }
     }
 
-
-
-
-    public enum PetTypes
+   
+      
+    public enum CityNames
+    {
+        Indianapolis = 0,
+        Mooresville = 1,
+        Beach_Grove = 2,
+        Carmel = 3,
+        Greenwood = 4,
+        Planefield = 5,
+        Noblesville = 6,
+        Brownsburg = 7,
+        Fishers = 8,
+        Speedway = 9,
+        Zionsvile = 10
+        }
+         public enum PetTypes
     {
         Dog = 0,
         Cat = 1,
@@ -41,6 +68,7 @@ namespace FurryFriends.Data.Entities
         Fish = 5,
         Bird = 6,
         Other = 7
+
     }
 
 }
