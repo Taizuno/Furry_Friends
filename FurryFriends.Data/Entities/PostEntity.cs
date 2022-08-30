@@ -10,6 +10,7 @@ namespace FurryFriends.Data.Entities
         public string Text { get; set; }
         public string UserName { get; set; }
         public DateTime DateTimeCreated { get; set; }
+        public DateTime DateTimeUpdated { get; set; }
         [ForeignKey("Owner")]
         public int OwnerId { get; set; }
         public UserEntity Owner { get; set; }
