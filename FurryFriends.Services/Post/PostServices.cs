@@ -1,8 +1,10 @@
 using System.Security.Claims;
+using System.Text.Json;
 using AutoMapper;
 using FurryFriends.Data;
 using FurryFriends.Data.Entities;
 using FurryFriends.Models.Post;
+using FurryFriends.Services.Wrapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,14 +47,21 @@ namespace FurryFriends.Services.Post
 
         }
 
-        public async Task<IEnumerable<PostListItem>> GetAllPostsAsync()
+        public async Task<IEnumerable<PostListItem>> GetAllPostsAsync(PaginationFilter _filter, HttpContext httpContext)
         {
             var posts = _DbContext.Post
                 .Where(entity => entity.OwnerId == _userId)
                 .OrderBy(p => p.Id)
                 .Select(entity => _mapper.Map<PostListItem>(entity));
 
-            return posts;
+            var paginationMetadata = new PaginationMetaData(posts.Count(), _filter.CurrentPage, _filter.PageSize);
+            httpContext.Response.Headers.Add("Pagination", JsonSerializer.Serialize(paginationMetadata));
+
+            var items = await posts.Skip((_filter.CurrentPage - 1) * _filter.PageSize)
+                .Take(_filter.PageSize)
+                .ToListAsync();
+
+            return items;
 
         }
 
