@@ -13,29 +13,24 @@ namespace FurryFriends.Services.Post
         private readonly int _userId;
         private readonly IMapper _mapper;
         private readonly ApplicationDbContext _DbContext;
-        public PostServices(IMapper mapper, ApplicationDbContext DbContext, IHttpContextAccessor httpContextAccessor)
+        public PostServices(IHttpContextAccessor httpContextAccessor, IMapper mapper, ApplicationDbContext DbContext)
         {
             var userClaims = httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
             var value = userClaims.FindFirst("Id")?.Value;
+            var validId = int.TryParse(value, out _userId);
+            if (!validId)
+                throw new Exception("Attempted to build PostService without User Id claim.");
             _mapper = mapper;
             _DbContext = DbContext;
         }
 
         public async Task<bool> CreatePostAsync(PostCreate model)
         {
-            var userId = User.Identity.Id;
-            var author = _DbContext.User.SingleOrDefault(x => x.Id == userId);
+            var postEntity = _mapper.Map<PostCreate, PostEntity>(model, opt =>
+            opt.AfterMap((src, dest) => dest.OwnerId = _userId));
 
-            var entity = new PostEntity
-            {
 
-                Text = model.Text,
-                UserName = model.UserName,
-                DateTimeCreated = DateTime.Now,
-                OwnerId = author
-
-            };
-            _DbContext.Post.Add(entity);
+            _DbContext.Post.Add(postEntity);
             var numberOfChanges = await _DbContext.SaveChangesAsync();
 
             return numberOfChanges == 1;
@@ -46,29 +41,16 @@ namespace FurryFriends.Services.Post
             var postToUser = await _DbContext.Post
                 .FirstOrDefaultAsync(e => e.Id == postId && e.OwnerId == _userId);
 
-            return postToUser is null ? null : new PostListItem
-            {
-                Id = postToUser.Id,
-                Text = postToUser.Text,
-                UserName = postToUser.UserName,
-                DateTimeCreated = postToUser.DateTimeCreated,
-                DateTimeUpdated = postToUser.DateTimeUpdated,
-                OwnerId = postToUser.OwnerId
-            };
+            return postToUser is null ? null : _mapper.Map<PostListItem>(postToUser);
+
         }
 
         public async Task<IEnumerable<PostListItem>> GetAllPostsAsync()
         {
-            var posts = await _DbContext.Post
-                    .Select(entity => _mapper.Map<PostListItem>(posts)
-                    {
-                Id = entity.Id,
-                        Text = entity.Text,
-                        UserName = entity.UserName,
-                        DateTimeCreated = entity.DateTimeCreated,
-                        OwnerId = entity.OwnerId
-                    })
-                    .ToListAsync();
+            var posts = _DbContext.Post
+                .Where(entity => entity.OwnerId == _userId)
+                .OrderBy(p => p.Id)
+                .Select(entity => _mapper.Map<PostListItem>(entity));
 
             return posts;
 
@@ -76,13 +58,15 @@ namespace FurryFriends.Services.Post
 
         public async Task<bool> UpdatePostAsync(PostUpdate request)
         {
-            var postEntity = await _DbContext.Post.FindAsync(request.Id);
+            var postIsUserOwned = await _DbContext.Post.AnyAsync(note =>
+    note.Id == request.Id && note.OwnerId == _userId);
+            if (!postIsUserOwned)
+                return false;
 
-            postEntity.Id = request.Id;
-            postEntity.Text = request.Text;
-            postEntity.UserName = request.UserName;
-            postEntity.DateTimeUpdated = DateTime.Now;
-
+            var newPost = _mapper.Map<PostUpdate, PostEntity>(request, opt =>
+            opt.AfterMap((src, dest) => dest.OwnerId = _userId));
+            _DbContext.Entry(newPost).State = EntityState.Modified;
+            _DbContext.Entry(newPost).Property(e => e.DateTimeCreated).IsModified = false;
             var numberOfChanges = await _DbContext.SaveChangesAsync();
 
             return numberOfChanges == 1;
