@@ -29,18 +29,18 @@ namespace FurryFriends.WebAPI.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<PostListItem>), 200)]
 
-        public async Task<IActionResult> GetAllNotes()
+        public async Task<IActionResult> GetAllPosts([FromQuery] PaginationFilter filter)
         {
-            var posts = await _postServices.GetAllPostsAsync();
+            var posts = await _postServices.GetAllPostsAsync(filter, HttpContext);
             return Ok(new Response<IEnumerable<PostListItem>>(posts));
 
         }
 
         [HttpGet("{postId:int}")]
         [ProducesResponseType(typeof(IEnumerable<PostListItem>), 200)]
-        public async Task<IActionResult> GetNoteById([FromRoute] int noteId)
+        public async Task<IActionResult> GetPostById([FromRoute] int postId)
         {
-            var detail = await _postServices.GetPostByIdAsync(noteId);
+            var detail = await _postServices.GetPostByIdAsync(postId);
 
             return detail is not null ? Ok(new Response<PostListItem>(detail)) : NotFound();
         }
