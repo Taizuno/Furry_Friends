@@ -67,8 +67,8 @@ namespace FurryFriends.Services.Post
 
         public async Task<bool> UpdatePostAsync(PostUpdate request)
         {
-            var postIsUserOwned = await _DbContext.Post.AnyAsync(note =>
-    note.Id == request.Id && note.OwnerId == _userId);
+            var postIsUserOwned = await _DbContext.Post.AnyAsync(post =>
+    post.Id == request.Id && post.OwnerId == _userId);
             if (!postIsUserOwned)
                 return false;
 

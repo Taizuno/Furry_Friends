@@ -10,6 +10,7 @@ namespace FurryFriends.Data
         public DbSet<UserEntity> User { get; set; }
         public DbSet<PostEntity> Post { get; set; }
         public DbSet<CommentEntity> Comment { get; set; }
+        public DbSet<ReplyEntity> Reply { get; set; }
 
     }
 }
