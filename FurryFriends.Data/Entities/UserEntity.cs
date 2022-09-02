@@ -13,6 +13,7 @@ namespace FurryFriends.Data.Entities
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Bio { get; set; }
 
         public virtual int PetType
         {
@@ -40,8 +41,6 @@ namespace FurryFriends.Data.Entities
         }
         [EnumDataType(typeof(Breeds))]
         public Breeds Breed { get; set; }       
-
-        public string Bio { get; set; }
         public string Size { get; set; }
 
          [Required]
