@@ -14,8 +14,4 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\FurryFriends.Models\FurryFriends.Models.csproj" />
-  </ItemGroup>
-
 </Project>
