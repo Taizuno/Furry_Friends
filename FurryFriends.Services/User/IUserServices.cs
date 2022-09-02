@@ -7,5 +7,6 @@ namespace FurryFriends.Services.User
     {
         Task<bool> RegisterUserAsync(UserCreate model);
         Task<bool> CreatePetProfileAsync(PetProfile model);
+        Task<PetProfile> GetAllProfiles();
     }
 }

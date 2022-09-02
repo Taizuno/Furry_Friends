@@ -1,6 +1,7 @@
 using FurryFriends.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace FurryFriends.Data
 {
     public class ApplicationDbContext : DbContext

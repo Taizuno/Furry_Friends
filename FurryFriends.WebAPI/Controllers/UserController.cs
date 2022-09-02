@@ -52,5 +52,18 @@ namespace FurryFriends.WebAPI.Controllers
         return BadRequest("User could not be registered.");
 
     }
+
+    [HttpGet("AllProfiles")]
+
+    public async Task<IActionResult> ViewAllProfiles()
+    {
+        var petProfiles = await _userService.GetAllProfiles();
+
+        if (petProfiles is null)
+        {
+            return NotFound();
+        }
+        return Ok(petProfiles);
+    }
     }
 }
