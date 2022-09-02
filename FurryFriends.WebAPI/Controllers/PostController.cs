@@ -51,7 +51,7 @@ namespace FurryFriends.WebAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return await _postServices.UpdatePostAsync(request) ? Ok("Post Updated successfully.") : BadRequest("Post could not be updated. ");
+            return await _postServices.UpdatePostAsync(request) ? Ok(new Response<PostUpdate>(request)) : BadRequest(new Response<PostUpdate>(request));
         }
 
 

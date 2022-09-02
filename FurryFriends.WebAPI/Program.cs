@@ -1,6 +1,7 @@
 using FurryFriends.Data;
 using FurryFriends.Services.Comment;
 using FurryFriends.Services.Post;
+using FurryFriends.Services.Reply;
 using FurryFriends.Services.Token;
 using FurryFriends.Services.User;
 using Microsoft.EntityFrameworkCore;
@@ -18,6 +19,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlSer
 builder.Services.AddScoped<ICommentServices, CommentServices>();
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IPostServices, PostServices>();
+builder.Services.AddScoped<IReplyServices, ReplyServices>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 
 
