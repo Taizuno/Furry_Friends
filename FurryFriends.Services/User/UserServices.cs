@@ -61,6 +61,7 @@ namespace FurryFriends.Services.User
                 BreedId = model.BreedId,
                 CityID = model.CityID,
                 Bio = model.Bio,
+                Size = model.Size
             };
 
             _DbContext.User.Add(entity);
@@ -81,6 +82,7 @@ namespace FurryFriends.Services.User
                 BreedId = entity.BreedId,
                 CityID = entity.CityID,
                 Bio = entity.Bio,
+                Size = entity.Size
             };
             return petProfile;
         }    
@@ -100,6 +102,7 @@ namespace FurryFriends.Services.User
                 BreedId = entity.BreedId,
                 CityID = entity.CityID,
                 Bio = entity.Bio,
+                Size = entity.Size
             };
             return petProfile;
         }
