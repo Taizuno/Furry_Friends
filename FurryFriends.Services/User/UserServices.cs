@@ -4,6 +4,7 @@ using FurryFriends.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using FurryFriends.Models.User;
+using System.Linq;
 
 namespace FurryFriends.Services.User
 {
@@ -59,6 +60,8 @@ namespace FurryFriends.Services.User
                 PetType = model.PetType,
                 BreedId = model.BreedId,
                 CityID = model.CityID,
+                Bio = model.Bio,
+                Size = model.Size
             };
 
             _DbContext.User.Add(entity);
@@ -68,5 +71,40 @@ namespace FurryFriends.Services.User
 
 
         }
-    }
-}
+        public async Task<PetProfile> GetAllProfiles()
+        {
+            var entity = await _DbContext.User.FirstOrDefaultAsync();
+            var petProfile = new PetProfile
+            {
+                Name = entity.Name,
+                Age = entity.Age,
+                PetType = entity.PetType,
+                BreedId = entity.BreedId,
+                CityID = entity.CityID,
+                Bio = entity.Bio,
+                Size = entity.Size
+            };
+            return petProfile;
+        }    
+        
+        public async Task<PetProfile> GetProfileByLocation(int CityID)
+        {
+            var entity = await _DbContext.User.FindAsync(CityID);
+            if (entity is null)
+            {
+                return null;
+            }
+            var petProfile = new PetProfile
+            {
+                Name = entity.Name,
+                Age = entity.Age,
+                PetType = entity.PetType,
+                BreedId = entity.BreedId,
+                CityID = entity.CityID,
+                Bio = entity.Bio,
+                Size = entity.Size
+            };
+            return petProfile;
+        }
+        }
+        }
