@@ -3,19 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace FurryFriends.Models.Comment
 {
-    public class CommentCreate
+    public class CommentListItem
     {
-        [Required]
         public int Id { get; set; }
-        [Required]
         public string Text { get; set; }
-        [Required]
         public string UserName { get; set; }
-        [Required]
          public int PostId { get; set; }
-         [Required]
          public DateTime DateTimeCreated { get; set; }
-         [Required]
+         public DateTime DateTimeUpdated { get; set; }
         public PostEntity RelatedPost { get; set; }
     }
 }
