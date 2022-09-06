@@ -15,6 +15,7 @@ namespace FurryFriends.Services.User
         {
             _DbContext = DbContext;
         }
+        private readonly int _userId;
 
         public async Task<bool> RegisterUserAsync (UserCreate model)
         {
@@ -106,5 +107,122 @@ namespace FurryFriends.Services.User
             };
             return petProfile;
         }
+
+        public async Task<PetProfile> GetProfileByAnimalType(int PetType)
+        {
+            var entity = await _DbContext.User.FindAsync(PetType);
+            if (entity is null)
+            {
+                return null;
+            }
+            var petProfile = new PetProfile
+            {
+                Name = entity.Name,
+                Age = entity.Age,
+                PetType = entity.PetType,
+                BreedId = entity.BreedId,
+                CityID = entity.CityID,
+                Bio = entity.Bio,
+                Size = entity.Size
+            };
+            return petProfile;
         }
+
+        public async Task<PetProfile> GetProfileByBreed(int BreedId)
+        {
+            var entity = await _DbContext.User.FindAsync(BreedId);
+            if (entity is null)
+            {
+                return null;
+            }
+            var petProfile = new PetProfile
+            {
+                Name = entity.Name,
+                Age = entity.Age,
+                PetType = entity.PetType,
+                BreedId = entity.BreedId,
+                CityID = entity.CityID,
+                Bio = entity.Bio,
+                Size = entity.Size
+            };
+            return petProfile;
         }
+
+        public async Task<PetProfile> GetProfileBySize(int Size)
+        {
+            var entity = await _DbContext.User.FindAsync(Size);
+            if (entity is null)
+            {
+                return null;
+            }
+            var petProfile = new PetProfile
+            {
+                Name = entity.Name,
+                Age = entity.Age,
+                PetType = entity.PetType,
+                BreedId = entity.BreedId,
+                CityID = entity.CityID,
+                Bio = entity.Bio,
+                Size = entity.Size
+            };
+            return petProfile;
+        }
+
+        public async Task<List<PetProfile>> GetProfileByAgeRange(int UpperAge, int LowerAge)
+        {
+            var entity = await _DbContext.User.FindAsync(UpperAge, LowerAge);
+            List<PetProfile> petProfile = new List<PetProfile>();
+            foreach(PetProfile x in petProfile)
+            {
+                if (UpperAge >= x.Age && LowerAge <= x.Age)
+                {
+                    petProfile.Add(
+                        new PetProfile()
+                        {
+                        Name = x.Name,
+                        Age = x.Age,
+                        PetType = x.PetType,
+                        BreedId = x.BreedId,
+                        CityID = x.CityID,
+                        Bio = x.Bio,
+                        Size = x.Size
+                        } 
+                    );
+                }
+            }
+                return petProfile;
+        }
+
+        public async Task<bool> UpdateAProfile(ProfileUpdate request)
+        {
+            var entity = await _DbContext.User.FindAsync(request.Id);
+            if(entity?.Id != _userId)
+            return false;
+
+            var profileUpdate = new ProfileUpdate
+            {
+                Name = entity.Name,
+                Age = entity.Age,
+                PetType = entity.PetType,
+                BreedId = entity.BreedId,
+                CityID = entity.CityID,
+                Bio = entity.Bio,
+                Size = entity.Size
+            };
+
+            var numberOfChanges = await _DbContext.SaveChangesAsync();
+            return numberOfChanges == 1; 
+        }
+
+        public async Task<bool> DeleteAUser(int Id)
+        {
+            var entity = await _DbContext.User.FindAsync(Id);
+            if(entity?.Id != _userId)
+            return false;
+            var userToDelete = await _DbContext.User.FindAsync(Id);
+
+            _DbContext.User.Remove(userToDelete);
+            return await _DbContext.SaveChangesAsync() == 1;
+        }
+}
+}

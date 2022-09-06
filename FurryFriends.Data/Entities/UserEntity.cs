@@ -6,6 +6,7 @@ namespace FurryFriends.Data.Entities
     {
         [Key]
         public int Id { get; set; }
+        public int OwnerId { get; set; }
         public string Name { get; set; }
         public int Age { get; set; }
         public string Email { get; set; }
@@ -14,6 +15,18 @@ namespace FurryFriends.Data.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Bio { get; set; }
+
+        public virtual int Size
+        {
+            get 
+            {
+                return (int)this.PetSize;
+            }
+            set
+            {
+                Size = (int)(PetSizes)value;
+            }
+        }
 
         public virtual int PetType
         {
@@ -39,11 +52,7 @@ namespace FurryFriends.Data.Entities
                 Breed = (Breeds)value;
             }
         }
-        [EnumDataType(typeof(Breeds))]
-        public Breeds Breed { get; set; }       
-        public string Size { get; set; }
 
-         [Required]
     public virtual int CityID
     {
         get
@@ -55,13 +64,27 @@ namespace FurryFriends.Data.Entities
             CityName = (CityNames)value;
         }
     }
+    [Required]
+    [EnumDataType(typeof(Breeds))]
+    public Breeds Breed { get; set; }   
+
     [EnumDataType(typeof(CityNames))]
     public CityNames CityName{ get; set;}
 
     [EnumDataType(typeof(PetTypes))]
     public PetTypes PetTypeEnum { get; set; }
+
+    [EnumDataType(typeof(PetSizes))]
+    public PetSizes PetSize { get; set; }
     }
 
+
+    public enum PetSizes
+    {
+        Small = 0,
+        Medium = 1,
+        Large = 2
+    }
    
      public enum Breeds {
             GoldenRetriever = 0,

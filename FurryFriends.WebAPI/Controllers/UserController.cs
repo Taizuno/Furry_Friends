@@ -4,6 +4,7 @@ using FurryFriends.Models.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using FurryFriends.Models.User;
+using FurryFriends.Services.Wrapper;
 
 namespace FurryFriends.WebAPI.Controllers
 {
@@ -65,5 +66,92 @@ namespace FurryFriends.WebAPI.Controllers
         }
         return Ok(petProfiles);
     }
+
+    [Authorize]
+    [HttpGet("ByLocation")]
+
+    public async Task<IActionResult> ViewProfileByLocation([FromBody] int CityID)
+    {
+        var petProfile = await _userService.GetProfileByLocation(CityID);
+
+        if (petProfile is null)
+        {
+            return NotFound();
+        }
+        return Ok(petProfile);
     }
-}
+
+    [Authorize]
+    [HttpGet("AnimalType")]
+    
+        public async Task<IActionResult> ViewProfileByAnimalType([FromBody] int PetType)
+        {
+            var petProfile = await _userService.GetProfileByAnimalType(PetType);
+
+            if (petProfile is null)
+            {
+                return NotFound();
+            }
+            return Ok(petProfile);
+        }
+
+    [Authorize]
+    [HttpGet("AnimalType")]
+
+        public async Task<IActionResult> ViewProfileBreed([FromBody] int BreedId)
+        {
+            var petProfile = await _userService.GetProfileByBreed(BreedId);
+
+            if (petProfile is null)
+            {
+                return NotFound();
+            }
+            return Ok(petProfile);
+        }
+
+    [Authorize]
+    [HttpGet("BySize")]
+
+        public async Task<IActionResult> ViewProfileBySize([FromBody] int Size)
+        {
+            var petProfile = await _userService.GetProfileByBreed(Size);
+
+            if (petProfile is null)
+            {
+                return NotFound();
+            }
+            return Ok(petProfile);
+        } 
+    [Authorize]
+    [HttpGet("AgeRange")]
+
+        public async Task<IActionResult> ViewProfileByAge([FromBody] int UpperAge, int LowerAge)
+        {
+            var petProfile = await _userService.GetProfileByAgeRange(UpperAge, LowerAge);
+
+            if (petProfile is null)
+            {
+                return NotFound();
+            }
+            return Ok(petProfile);
+        } 
+
+    [HttpPut]
+    public async Task<IActionResult> EditProfile([FromBody] ProfileUpdate request)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        return await _userService.UpdateAProfile(request) ? Ok(new Response<ProfileUpdate>(request)) : BadRequest(new Response<ProfileUpdate>(request));
+    }
+
+    [HttpDelete]
+    public async Task<IActionResult> DeleteUser ([FromRoute] int Id)
+    {
+        return await _userService.DeleteAUser(Id) ? Ok($"Post with the id:{Id} was deleted successfully.") : BadRequest($"Post with {Id} could not be deleted.");
+    }
+    }
+    }
+    
