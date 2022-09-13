@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using FurryFriends.Services.Comment;
 using FurryFriends.Models.Comment;
+using FurryFriends.Services.Wrapper;
 
 namespace FurryFriends.WebAPI.Controllers
 {
@@ -32,10 +33,17 @@ namespace FurryFriends.WebAPI.Controllers
             }
             return BadRequest("Comment could not be made");
         }
+
         [HttpGet("Comments by UserName")]
-        public async Task<IActionResult> GetCommentsbyUserNameAsync()
+        [Route("{Id}")]
+        public async Task<IActionResult> GetCommentbyID([FromRoute] int commentID)
         {
-            var comments = await 
+            var getResult = await _service.GetCommentbyIDAsync(commentID);
+
+            return getResult is not null ? Ok(new Response<CommentListItem>(getResult)) : NotFound();
         }
+
+        [HttpPut]
+        
     }
 }

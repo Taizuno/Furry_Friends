@@ -72,20 +72,23 @@ namespace FurryFriends.Services.User
 
 
         }
-        public async Task<PetProfile> GetAllProfiles()
+        public async Task<List<PetProfile>> GetAllProfiles()
         {
-            var entity = await _DbContext.User.FirstOrDefaultAsync();
-            var petProfile = new PetProfile
-            {
-                Name = entity.Name,
-                Age = entity.Age,
-                PetType = entity.PetType,
-                BreedId = entity.BreedId,
-                CityID = entity.CityID,
-                Bio = entity.Bio,
-                Size = entity.Size
-            };
-            return petProfile;
+            List<PetProfile> entity = await _DbContext.User 
+                .Select(r => new PetProfile()
+                {
+                    Id=r.Id,
+                    Name = r.Name,
+                    Age = r.Age,
+                    PetType = r.PetType,
+                    BreedId = r.BreedId,
+                    CityID = r.CityID,
+                    Bio = r.Bio,
+                    Size = r.Size
+                })
+                .ToListAsync();
+            
+            return entity;
         }    
         
         public async Task<PetProfile> GetProfileByLocation(int CityID)
@@ -170,27 +173,21 @@ namespace FurryFriends.Services.User
 
         public async Task<List<PetProfile>> GetProfileByAgeRange(int UpperAge, int LowerAge)
         {
-            var entity = await _DbContext.User.FindAsync(UpperAge, LowerAge);
-            List<PetProfile> petProfile = new List<PetProfile>();
-            foreach(PetProfile x in petProfile)
-            {
-                if (UpperAge >= x.Age && LowerAge <= x.Age)
+            List<PetProfile> entity = await _DbContext.User 
+                .Select(r => new PetProfile
                 {
-                    petProfile.Add(
-                        new PetProfile()
-                        {
-                        Name = x.Name,
-                        Age = x.Age,
-                        PetType = x.PetType,
-                        BreedId = x.BreedId,
-                        CityID = x.CityID,
-                        Bio = x.Bio,
-                        Size = x.Size
-                        } 
-                    );
-                }
-            }
-                return petProfile;
+                    Id=r.Id,
+                    Name = r.Name,
+                    Age = r.Age,
+                    PetType = r.PetType,
+                    BreedId = r.BreedId,
+                    CityID = r.CityID,
+                    Bio = r.Bio,
+                    Size = r.Size
+                })
+                .ToListAsync();
+            
+            return entity;
         }
 
         public async Task<bool> UpdateAProfile(ProfileUpdate request)
