@@ -34,7 +34,7 @@ namespace FurryFriends.WebAPI.Controllers
             return BadRequest("Comment could not be made");
         }
 
-        [HttpGet("Comments by UserName")]
+        [HttpGet("Comment by ID")]
         [Route("{Id}")]
         public async Task<IActionResult> GetCommentbyID([FromRoute] int commentID)
         {
@@ -43,7 +43,28 @@ namespace FurryFriends.WebAPI.Controllers
             return getResult is not null ? Ok(new Response<CommentListItem>(getResult)) : NotFound();
         }
 
-        [HttpPut]
+         [HttpGet]
         
+        public async Task<IActionResult> GetCommentsbyUserName([FromQuery] string Username)
+        {
+            var getResult = await _service.GetCommentsbyUserNameAsync(Username);
+
+            return Ok(new Response<IEnumerable<CommentListItem>>(getResult));
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> UpdateCommentByID([FromBody] CommentUpdate request)
+        {
+            if(!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return await _service.UpdateCommentAsync(request) ? Ok(new Response<CommentUpdate>(request)) : BadRequest(new Response<CommentUpdate>(request));
+        }
+
+        [HttpDelete("{commentId:int}")]
+        public async Task<IActionResult> DeleteComment([FromRoute] int commentId)
+        {
+            return await _service.DeleteCommentAsync(commentId) ? Ok($"The comment (ID:{commentId}) has been deleted.") : BadRequest($"Comment (ID:{commentId}) could not be deleted.");
+        }
     }
 }
