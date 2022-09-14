@@ -21,7 +21,7 @@ namespace FurryFriends.Services.Comment
         }
         public async Task<bool> CreateCommentAsync(CommentCreate model)
         {
-            if (await GetCommentByIDAsync(model.Id) != null)
+            if (await GetCommentbyIDAsync(model.Id) != null)
                 return false;
             var entity = new CommentEntity
             {
@@ -38,25 +38,27 @@ namespace FurryFriends.Services.Comment
 
             return numberOfChanges == 1;
         }
-        public async Task<CommentListItem> GetCommentByIDAsync(int commentId)
+        public async Task<CommentListItem> GetCommentbyIDAsync(int commentId)
         {
             var comment = await _DbContext.Comment.FirstOrDefaultAsync(e => e.Id == commentId);
 
             return _mapper.Map<CommentListItem>(comment);
             
         }
-        public async Task<IEnumerable<CommentListItem>> GetCommentsByUserNameAsync(PaginationFilter _filter, HttpContext httpContext, string Username)
+        public async Task<List<CommentListItem>> GetCommentsbyUserNameAsync(string Username)
         {
-            var comments = await _DbContext.Comment
-                .Select(entity => _mapper.Map<CommentListItem>(entity));
+            var comments = _DbContext.Comment.Select(entity => _mapper.Map<CommentListItem>(entity));
 
-            var pMetadata = new PaginationMetaData(comments.Count(),
-            _filter.CurrentPage, _filter.PageSize);
-            httpContext.Response.Headers.Add("Pagination", JsonSerializer.Serialize(pMetadata));
+            List<CommentListItem> list = new List<CommentListItem>();
+            foreach(CommentListItem x in comments)
+            {
+                if(x.UserName == Username)
+                {
+                    list.Add(x);
+                }
+            }
 
-            var list = await comments.Skip((_filter.CurrentPage -1) * _filter.PageSize)
-                .Take(_filter.PageSize)
-                .ToListAsync();
+            return list;
         }
         
         public async Task<bool> UpdateCommentAsync(CommentUpdate request)
