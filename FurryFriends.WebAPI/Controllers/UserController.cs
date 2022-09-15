@@ -84,7 +84,7 @@ namespace FurryFriends.WebAPI.Controllers
         [Authorize]
         [HttpGet("AnimalType")]
 
-        public async Task<IActionResult> ViewProfileByAnimalType([FromBody] int PetType)
+        protected async Task<IActionResult> ViewProfileByAnimalType([FromBody] int PetType)
         {
             var petProfile = await _userService.GetProfileByAnimalType(PetType);
 

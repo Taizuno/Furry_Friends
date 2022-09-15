@@ -34,9 +34,9 @@ namespace FurryFriends.WebAPI.Controllers
             return BadRequest("Comment could not be made");
         }
 
-        [HttpGet("Comment by ID")]
+        [HttpGet("CommentbyID")]
         [Route("{Id}")]
-        public async Task<IActionResult> GetCommentbyID([FromRoute] int commentID)
+        protected async Task<IActionResult> GetCommentbyID([FromRoute] int commentID)
         {
             var getResult = await _service.GetCommentbyIDAsync(commentID);
 
