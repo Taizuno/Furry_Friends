@@ -17,73 +17,73 @@ namespace FurryFriends.WebAPI.Controllers
         {
             _userService = userService;
         }
-    
 
-    [HttpPost("Register")]  
-    public async Task<IActionResult> RegisterUser ([FromBody] UserCreate model)
-    {
-        if (!ModelState.IsValid)
+
+        [HttpPost("Register")]
+        public async Task<IActionResult> RegisterUser([FromBody] UserCreate model)
         {
-            return BadRequest(ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var registerResult = await _userService.RegisterUserAsync(model);
+            if (registerResult)
+            {
+                return Ok("User was registered.");
+            }
+
+            return BadRequest("User could not be registered.");
         }
 
-        var registerResult = await _userService.RegisterUserAsync(model);
-        if (registerResult)
+        [HttpPost("Create")]
+        public async Task<IActionResult> CreateProfile([FromBody] PetProfile model)
         {
-            return Ok("User was registered.");
-        }
-        
-        return BadRequest("User could not be registered.");
-    }
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-    [HttpPost("Create")]
-    public async Task<IActionResult> CreateProfile ([FromBody] PetProfile model)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+            var createResult = await _userService.CreatePetProfileAsync(model);
+            if (createResult)
+            {
+                return Ok("Profile was created.");
+            }
 
-        var createResult = await _userService.CreatePetProfileAsync(model);
-        if (createResult)
-        {
-            return Ok("Profile was created.");
+            return BadRequest("User could not be registered.");
+
         }
 
-        return BadRequest("User could not be registered.");
+        [HttpGet("AllProfiles")]
 
-    }
-
-    [HttpGet("AllProfiles")]
-
-    public async Task<IActionResult> ViewAllProfiles()
-    {
-        var petProfiles = await _userService.GetAllProfiles();
-
-        if (petProfiles is null)
+        public async Task<IActionResult> ViewAllProfiles()
         {
-            return NotFound();
+            var petProfiles = await _userService.GetAllProfiles();
+
+            if (petProfiles is null)
+            {
+                return NotFound();
+            }
+            return Ok(petProfiles);
         }
-        return Ok(petProfiles);
-    }
 
-    [Authorize]
-    [HttpGet("ByLocation")]
+        [Authorize]
+        [HttpGet("ByLocation")]
 
-    public async Task<IActionResult> ViewProfileByLocation([FromBody] int CityID)
-    {
-        var petProfile = await _userService.GetProfileByLocation(CityID);
-
-        if (petProfile is null)
+        public async Task<IActionResult> ViewProfileByLocation([FromBody] int CityID)
         {
-            return NotFound();
-        }
-        return Ok(petProfile);
-    }
+            var petProfile = await _userService.GetProfileByLocation(CityID);
 
-    [Authorize]
-    [HttpGet("AnimalType")]
-    
+            if (petProfile is null)
+            {
+                return NotFound();
+            }
+            return Ok(petProfile);
+        }
+
+        [Authorize]
+        [HttpGet("AnimalType")]
+
         public async Task<IActionResult> ViewProfileByAnimalType([FromBody] int PetType)
         {
             var petProfile = await _userService.GetProfileByAnimalType(PetType);
@@ -95,8 +95,8 @@ namespace FurryFriends.WebAPI.Controllers
             return Ok(petProfile);
         }
 
-    [Authorize]
-    [HttpGet("AnimalType")]
+        [Authorize]
+        [HttpGet("AnimalType")]
 
         public async Task<IActionResult> ViewProfileBreed([FromBody] int BreedId)
         {
@@ -109,8 +109,8 @@ namespace FurryFriends.WebAPI.Controllers
             return Ok(petProfile);
         }
 
-    [Authorize]
-    [HttpGet("BySize")]
+        [Authorize]
+        [HttpGet("BySize")]
 
         public async Task<IActionResult> ViewProfileBySize([FromBody] int Size)
         {
@@ -121,9 +121,9 @@ namespace FurryFriends.WebAPI.Controllers
                 return NotFound();
             }
             return Ok(petProfile);
-        } 
-    [Authorize]
-    [HttpGet("AgeRange")]
+        }
+        [Authorize]
+        [HttpGet("AgeRange")]
 
         public IActionResult ViewProfileByAge([FromBody] int UpperAge, int LowerAge)
         {
@@ -134,24 +134,24 @@ namespace FurryFriends.WebAPI.Controllers
                 return NotFound();
             }
             return Ok(petProfile);
-        } 
-
-    [HttpPut]
-    public async Task<IActionResult> EditProfile([FromBody] ProfileUpdate request)
-    {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
         }
 
-        return await _userService.UpdateAProfile(request) ? Ok(new Response<ProfileUpdate>(request)) : BadRequest(new Response<ProfileUpdate>(request));
-    }
+        [HttpPut]
+        public async Task<IActionResult> EditProfile([FromBody] ProfileUpdate request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-    [HttpDelete]
-    public async Task<IActionResult> DeleteUser ([FromRoute] int Id)
-    {
-        return await _userService.DeleteAUser(Id) ? Ok($"Post with the id:{Id} was deleted successfully.") : BadRequest($"Post with {Id} could not be deleted.");
+            return await _userService.UpdateAProfile(request) ? Ok(new Response<ProfileUpdate>(request)) : BadRequest(new Response<ProfileUpdate>(request));
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteUser([FromRoute] int Id)
+        {
+            return await _userService.DeleteAUser(Id) ? Ok($"Post with the id:{Id} was deleted successfully.") : BadRequest($"Post with {Id} could not be deleted.");
+        }
     }
-    }
-    }
-    
+}
+

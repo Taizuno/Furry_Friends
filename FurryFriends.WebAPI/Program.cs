@@ -1,4 +1,5 @@
 using FurryFriends.Data;
+using FurryFriends.Models.Maps;
 using FurryFriends.Services.Comment;
 using FurryFriends.Services.Post;
 using FurryFriends.Services.Reply;
@@ -22,7 +23,9 @@ builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<IPostServices, PostServices>();
 builder.Services.AddScoped<IReplyServices, ReplyServices>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-
+builder.Services.AddAutoMapper(typeof(PostMapProfile));
+builder.Services.AddAutoMapper(typeof(ReplyMapProfile));
+builder.Services.AddAutoMapper(typeof(CommentMapProfile));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

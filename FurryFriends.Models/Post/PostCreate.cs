@@ -12,7 +12,7 @@ namespace FurryFriends.Models.Post
         [Required]
         public string UserName { get; set; }
         public DateTime DateTimeCreated { get; set; }
-        public DateTime DateTimeUpdated { get; set; }
+        public DateTime? DateTimeUpdated { get; set; }
 
         public int OwnerId { get; set; }
 

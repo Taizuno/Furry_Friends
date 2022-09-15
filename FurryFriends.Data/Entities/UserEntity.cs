@@ -16,66 +16,26 @@ namespace FurryFriends.Data.Entities
         public string LastName { get; set; }
         public string Bio { get; set; }
 
-        public virtual int Size
-        {
-            get 
-            {
-                return (int)this.PetSize;
-            }
-            set
-            {
-                Size = (int)(PetSizes)value;
-            }
-        }
+        public PetSizes Size { get; set; }
 
-        public virtual int PetType
-        {
-            get
-            {
-                return (int)this.PetTypeEnum;
-            }
-            set
-            {
-                PetType = (int)(PetTypes)value;
-            }
-        }       
+        public PetTypes PetType { get; set; }
 
         [Required]
-        public virtual int BreedId 
-        {
-            get
-            {
-                return (int)this.Breed;
-            }
-            set
-            {
-                Breed = (Breeds)value;
-            }
-        }
+        public Breeds BreedId { get; set; }
 
-    public virtual int CityID
-    {
-        get
-        {
-            return (int)this.CityName;
-        }
-        set
-        {
-            CityName = (CityNames)value;
-        }
-    }
-    [Required]
-    [EnumDataType(typeof(Breeds))]
-    public Breeds Breed { get; set; }   
+        public CityNames CityID { get; set; }
+        [Required]
+        [EnumDataType(typeof(Breeds))]
+        public Breeds Breed { get; set; }
 
-    [EnumDataType(typeof(CityNames))]
-    public CityNames CityName{ get; set;}
+        [EnumDataType(typeof(CityNames))]
+        public CityNames CityName { get; set; }
 
-    [EnumDataType(typeof(PetTypes))]
-    public PetTypes PetTypeEnum { get; set; }
+        [EnumDataType(typeof(PetTypes))]
+        public PetTypes PetTypeEnum { get; set; }
 
-    [EnumDataType(typeof(PetSizes))]
-    public PetSizes PetSize { get; set; }
+        [EnumDataType(typeof(PetSizes))]
+        public PetSizes PetSize { get; set; }
     }
 
 
@@ -85,36 +45,37 @@ namespace FurryFriends.Data.Entities
         Medium = 1,
         Large = 2
     }
-   
-     public enum Breeds {
-            GoldenRetriever = 0,
-            LabradorRetriever = 1,
-            FrenchBullDog = 2,
-            Beagle = 3,
-            GermanShepherd = 4,
-            Poodle = 5,
-            Bulldog = 6,
-            Pomeranian = 7,
-            PitbullTerrier = 8,
-            Husky = 9,
-            Chihuahua = 10,
-            Corgi = 11,
-            MixedBreed = 12,
-            AlaskanMalamute = 13,
-            BorderCollie = 14,
-            JackRussellTerrier = 15, 
-            BassetHound = 16,
-            SharPei = 17,
-            YorkshireTerrier = 18,
-            Rottweiler = 19,
-            SaintBernard = 20, 
-            Newfoundland = 21, 
-            Greyhound = 22, 
-            CockerSpaniel = 23,
-            Daschund = 24,
-            Other = 25
 
-        }
+    public enum Breeds
+    {
+        GoldenRetriever = 0,
+        LabradorRetriever = 1,
+        FrenchBullDog = 2,
+        Beagle = 3,
+        GermanShepherd = 4,
+        Poodle = 5,
+        Bulldog = 6,
+        Pomeranian = 7,
+        PitbullTerrier = 8,
+        Husky = 9,
+        Chihuahua = 10,
+        Corgi = 11,
+        MixedBreed = 12,
+        AlaskanMalamute = 13,
+        BorderCollie = 14,
+        JackRussellTerrier = 15,
+        BassetHound = 16,
+        SharPei = 17,
+        YorkshireTerrier = 18,
+        Rottweiler = 19,
+        SaintBernard = 20,
+        Newfoundland = 21,
+        Greyhound = 22,
+        CockerSpaniel = 23,
+        Daschund = 24,
+        Other = 25
+
+    }
     public enum CityNames
     {
         Indianapolis = 0,
@@ -128,8 +89,8 @@ namespace FurryFriends.Data.Entities
         Fishers = 8,
         Speedway = 9,
         Zionsvile = 10
-        }
-         public enum PetTypes
+    }
+    public enum PetTypes
     {
         Dog = 0,
         Cat = 1,
