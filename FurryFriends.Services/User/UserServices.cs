@@ -87,7 +87,6 @@ namespace FurryFriends.Services.User
                     Size = r.Size
                 })
                 .ToListAsync();
-            
             return entity;
         }    
         
@@ -171,23 +170,23 @@ namespace FurryFriends.Services.User
             return petProfile;
         }
 
-        public async Task<List<PetProfile>> GetProfileByAgeRange(int UpperAge, int LowerAge)
+        public List<UserEntity> GetProfileByAgeRange(int UpperAge, int LowerAge)
         {
-            List<PetProfile> entity = await _DbContext.User 
-                .Select(r => new PetProfile
-                {
-                    Id=r.Id,
-                    Name = r.Name,
-                    Age = r.Age,
-                    PetType = r.PetType,
-                    BreedId = r.BreedId,
-                    CityID = r.CityID,
-                    Bio = r.Bio,
-                    Size = r.Size
-                })
-                .ToListAsync();
-            
-            return entity;
+            var petList = _DbContext.User
+                .Where(x => x.Age >= LowerAge && x.Age <= UpperAge)
+                .Select(
+                    x => new UserEntity
+                    {
+                        Name = x.Name,
+                        Age = x.Age,
+                        PetType = x.PetType,
+                        BreedId = x.BreedId,
+                        CityID = x.CityID,
+                        Bio = x.Bio,
+                        Size = x.Size
+                    }
+                );
+                return petList.ToList();
         }
 
         public async Task<bool> UpdateAProfile(ProfileUpdate request)

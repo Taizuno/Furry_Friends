@@ -125,9 +125,9 @@ namespace FurryFriends.WebAPI.Controllers
     [Authorize]
     [HttpGet("AgeRange")]
 
-        public async Task<IActionResult> ViewProfileByAge([FromBody] int UpperAge, int LowerAge)
+        public IActionResult ViewProfileByAge([FromBody] int UpperAge, int LowerAge)
         {
-            var petProfile = await _userService.GetProfileByAgeRange(UpperAge, LowerAge);
+            var petProfile = _userService.GetProfileByAgeRange(UpperAge, LowerAge);
 
             if (petProfile is null)
             {
