@@ -8,7 +8,7 @@ using FurryFriends.Services.Wrapper;
 
 namespace FurryFriends.WebAPI.Controllers
 {
-    [Route("api/[controller")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
