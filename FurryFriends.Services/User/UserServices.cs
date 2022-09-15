@@ -74,7 +74,7 @@ namespace FurryFriends.Services.User
         }
         public async Task<List<PetProfile>> GetAllProfiles()
         {
-            List<PetProfile> entity = await _DbContext.User
+            List<PetProfile> entity = await _DbContext.User 
                 .Select(r => new PetProfile()
                 {
                     Id=r.Id,
@@ -187,7 +187,6 @@ namespace FurryFriends.Services.User
                     }
                 );
                 return petList.ToList();
-
         }
 
         public async Task<bool> UpdateAProfile(ProfileUpdate request)
