@@ -6,7 +6,6 @@ using FurryFriends.Services.Reply;
 using FurryFriends.Services.Token;
 using FurryFriends.Services.User;
 using Microsoft.EntityFrameworkCore;
-using FurryFriends.Models.Maps;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,10 +29,12 @@ builder.Services.AddAutoMapper(typeof(CommentMapProfile));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddAutoMapper(typeof(PostMapProfile));
-builder.Services.AddAutoMapper(typeof(ReplyMapProfile));
-builder.Services.AddAutoMapper(typeof(CommentMapProfile));
+// builder.Services.AddSwaggerGen();
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.CustomSchemaIds(type => type.ToString());
+});
 
 
 var app = builder.Build();
