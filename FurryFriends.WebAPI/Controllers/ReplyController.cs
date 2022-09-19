@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FurryFriends.WebAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ReplyController : ControllerBase
     {
+
         private readonly IReplyServices _replyServices;
         public ReplyController(IReplyServices replyServices)
         {
@@ -16,6 +19,7 @@ namespace FurryFriends.WebAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<ReplyCreate>), 200)]
         public async Task<IActionResult> CreateReply([FromBody] ReplyCreate request)
         {
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
