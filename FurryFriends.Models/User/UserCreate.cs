@@ -4,15 +4,12 @@ namespace FurryFriends.Models.Users
 {
     public class UserCreate
     {
-        [Required]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
         [MinLength(4)]
         public string Username { get; set; }
 
-        [Required]
         [MinLength(4)]
         public string Password { get; set; }
 

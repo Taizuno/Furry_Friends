@@ -20,7 +20,7 @@ namespace FurryFriends.WebAPI.Controllers
 
 
         [HttpPost("Register")]
-        public async Task<IActionResult> RegisterUser([FromBody] UserCreate model)
+        public async Task<IActionResult> RegisterUser([FromForm] UserCreate model)
         {
             if (!ModelState.IsValid)
             {
@@ -37,7 +37,7 @@ namespace FurryFriends.WebAPI.Controllers
         }
 
         [HttpPost("Create")]
-        public async Task<IActionResult> CreateProfile([FromBody] PetProfile model)
+        public async Task<IActionResult> CreateProfile([FromForm] CreatePetProfile model)
         {
             if (!ModelState.IsValid)
             {
@@ -72,7 +72,7 @@ namespace FurryFriends.WebAPI.Controllers
 
         public async Task<IActionResult> ViewProfileByLocation([FromBody] int CityID)
         {
-            var petProfile = await _userService.GetProfileByLocation(CityID);
+            var petProfile = _userService.GetProfileByLocation(CityID);
 
             if (petProfile is null)
             {
@@ -86,7 +86,7 @@ namespace FurryFriends.WebAPI.Controllers
 
         protected async Task<IActionResult> ViewProfileByAnimalType([FromBody] int PetType)
         {
-            var petProfile = await _userService.GetProfileByAnimalType(PetType);
+            var petProfile = _userService.GetProfileByAnimalType(PetType);
 
             if (petProfile is null)
             {
@@ -100,7 +100,7 @@ namespace FurryFriends.WebAPI.Controllers
 
         public async Task<IActionResult> ViewProfileBreed([FromBody] int BreedId)
         {
-            var petProfile = await _userService.GetProfileByBreed(BreedId);
+            var petProfile = _userService.GetProfileByBreed(BreedId);
 
             if (petProfile is null)
             {
@@ -114,7 +114,7 @@ namespace FurryFriends.WebAPI.Controllers
 
         public async Task<IActionResult> ViewProfileBySize([FromBody] int Size)
         {
-            var petProfile = await _userService.GetProfileByBreed(Size);
+            var petProfile = _userService.GetProfileByBreed(Size);
 
             if (petProfile is null)
             {
