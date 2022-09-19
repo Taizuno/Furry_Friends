@@ -7,13 +7,13 @@ namespace FurryFriends.Services.User
     public interface IUserServices
     {
         Task<bool> RegisterUserAsync(UserCreate model);
-        Task<bool> CreatePetProfileAsync(PetProfile model);
+        Task<bool> CreatePetProfileAsync(CreatePetProfile model);
         Task<List<PetProfile>> GetAllProfiles();
-        Task<PetProfile> GetProfileByLocation(int CityID);
-        Task<PetProfile> GetProfileByAnimalType(int PetType);
-        Task<PetProfile> GetProfileByBreed(int BreedId);
-        Task<PetProfile> GetProfileBySize(int Size);
-        List<UserEntity> GetProfileByAgeRange(int UpperAge, int LowerAge);
+        List<PetProfile> GetProfileByLocation(int CityID);
+        List<PetProfile> GetProfileByAnimalType(int PetType);
+        List<PetProfile> GetProfileByBreed(int BreedId);
+        List<PetProfile> GetProfileBySize(int Size);
+        List<ProfileEntity> GetProfileByAgeRange(int UpperAge, int LowerAge);
         Task<bool> UpdateAProfile(ProfileUpdate request);
         Task<bool> DeleteAUser(int Id);
     }

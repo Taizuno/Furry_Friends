@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FurryFriends.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220826005324_InitialCreate")]
+    [Migration("20220919195428_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -64,6 +64,9 @@ namespace FurryFriends.Data.Migrations
                     b.Property<DateTime>("DateTimeCreated")
                         .HasColumnType("datetime2");
 
+                    b.Property<DateTime>("DateTimeUpdated")
+                        .HasColumnType("datetime2");
+
                     b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
@@ -82,7 +85,7 @@ namespace FurryFriends.Data.Migrations
                     b.ToTable("Post");
                 });
 
-            modelBuilder.Entity("FurryFriends.Data.Entities.UserEntity", b =>
+            modelBuilder.Entity("FurryFriends.Data.Entities.ProfileEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,29 +100,87 @@ namespace FurryFriends.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Breed")
-                        .HasColumnType("int");
-
                     b.Property<int>("BreedId")
                         .HasColumnType("int");
 
                     b.Property<int>("CityID")
                         .HasColumnType("int");
 
-                    b.Property<int>("CityName")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("OwnerId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PetType")
                         .HasColumnType("int");
 
-                    b.Property<int>("PetTypeEnum")
+                    b.Property<int>("Size")
                         .HasColumnType("int");
 
-                    b.Property<string>("Size")
+                    b.HasKey("Id");
+
+                    b.ToTable("Profiles");
+                });
+
+            modelBuilder.Entity("FurryFriends.Data.Entities.ReplyEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateTimeCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateTimeUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.ToTable("Reply");
+                });
+
+            modelBuilder.Entity("FurryFriends.Data.Entities.UserEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Username")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -148,6 +209,17 @@ namespace FurryFriends.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("FurryFriends.Data.Entities.ReplyEntity", b =>
+                {
+                    b.HasOne("FurryFriends.Data.Entities.CommentEntity", "Comment")
+                        .WithMany()
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
                 });
 #pragma warning restore 612, 618
         }
