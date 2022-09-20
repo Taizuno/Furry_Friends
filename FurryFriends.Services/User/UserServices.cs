@@ -15,7 +15,7 @@ namespace FurryFriends.Services.User
         {
             _DbContext = DbContext;
         }
-        private readonly int _userId;
+        // private readonly int _userId;
 
         public async Task<bool> RegisterUserAsync(UserCreate model)
         {
@@ -50,16 +50,16 @@ namespace FurryFriends.Services.User
             return await _DbContext.User.FirstOrDefaultAsync(user => user.Username.ToLower() == username.ToLower());
         }
 
-        // private async Task<bool> VerifyValidId (int id)
-        // {
-        //     var result = await _DbContext.User.FirstOrDefaultAsync(x => x.Id == id);
+        private async Task<bool> VerifyValidId (int id)
+        {
+            var result = await _DbContext.User.FirstOrDefaultAsync(x => x.Id == id);
 
-        //     return result != null ? true : false; 
-        // }
+            return result != null ? true : false; 
+        }
 
         public async Task<bool> CreatePetProfileAsync(CreatePetProfile model)
         {
-            // if (! await VerifyValidId(model.OwnerId)) return false;
+            if (! await VerifyValidId(model.OwnerId)) return false;
             _DbContext.Profiles.Add(new ProfileEntity
             {
                 Name = model.Name,
@@ -68,7 +68,8 @@ namespace FurryFriends.Services.User
                 BreedId = model.BreedId,
                 CityID = model.CityID,
                 Bio = model.Bio,
-                Size = model.Size
+                Size = model.Size,
+                OwnerId = model.OwnerId
             });
             var numberOfChanges = await _DbContext.SaveChangesAsync();
 
@@ -93,10 +94,10 @@ namespace FurryFriends.Services.User
             return entity;
         }
 
-        public List<PetProfile> GetProfileByLocation(int CityID)
+        public List<PetProfile> GetProfileByLocation(int cityID)
         {
             var petList = _DbContext.Profiles
-                .Where (x => (int)x.CityID == CityID)
+                .Where (x => (int)x.CityID == cityID)
                 .Select(
                     x => new PetProfile
                     {
@@ -113,10 +114,10 @@ namespace FurryFriends.Services.User
             return petList.ToList();
         }
 
-        public List<PetProfile> GetProfileByAnimalType(int PetType)
+        public List<PetProfile> GetProfileByAnimalType(int petType)
         {
             var petList = _DbContext.Profiles
-                .Where (x => (int)x.PetType == PetType)
+                .Where (x => (int)x.PetType == petType)
                 .Select(
                     x => new PetProfile
                     {
@@ -133,10 +134,10 @@ namespace FurryFriends.Services.User
             return petList.ToList();
         }
 
-        public List<PetProfile> GetProfileByBreed(int BreedId)
+        public List<PetProfile> GetProfileByBreed(int breedId)
         {
             var petList = _DbContext.Profiles
-                .Where (x => (int)x.BreedId == BreedId)
+                .Where (x => (int)x.BreedId == breedId)
                 .Select(
                     x => new PetProfile
                     {
@@ -173,10 +174,10 @@ namespace FurryFriends.Services.User
             return petList.ToList();
         }
 
-        public List<ProfileEntity> GetProfileByAgeRange(int UpperAge, int LowerAge)
+        public List<ProfileEntity> GetProfileByAgeRange(int upperAge, int lowerAge)
         {
             var petList = _DbContext.Profiles
-                .Where(x => x.Age >= LowerAge && x.Age <= UpperAge)
+                .Where(x => x.Age >= lowerAge && x.Age <= upperAge)
                 .Select(
                     x => new ProfileEntity
                     {
@@ -195,32 +196,32 @@ namespace FurryFriends.Services.User
         public async Task<bool> UpdateAProfile(ProfileUpdate request)
         {
             var entity = await _DbContext.Profiles.FindAsync(request.Id);
-            if (entity?.Id != _userId)
+            if (entity?.OwnerId != request.OwnerId)
                 return false;
 
-            var profileUpdate = new ProfileUpdate
-            {
-                Name = entity.Name,
-                Age = entity.Age,
-                PetType = (int)entity.PetType,
-                BreedId = (int)entity.BreedId,
-                CityID = (int)entity.CityID,
-                Bio = entity.Bio,
-                Size = (int)entity.Size
-            };
+            // var profileUpdate = new ProfileUpdate
+            // {
+                entity.Name = request.Name;
+                entity.Age = request.Age;
+                entity.PetType = (PetTypes)request.PetType;
+                entity.BreedId = (Breeds)request.BreedId;
+                entity.CityID = (CityNames)request.CityID;
+                entity.Bio = request.Bio;
+                entity.Size = (PetSizes)request.Size;
+                entity.Id = request.Id;
+            // };
 
             var numberOfChanges = await _DbContext.SaveChangesAsync();
             return numberOfChanges == 1;
         }
 
-        public async Task<bool> DeleteAUser(int Id)
+        public async Task<bool> DeleteAUser(int id)
         {
-            var entity = await _DbContext.User.FindAsync(Id);
-            if (entity?.Id != _userId)
+            var entity = await _DbContext.User.FindAsync(id);
+            if (entity == null)
                 return false;
-            var userToDelete = await _DbContext.User.FindAsync(Id);
 
-            _DbContext.User.Remove(userToDelete);
+            _DbContext.User.Remove(entity);
             return await _DbContext.SaveChangesAsync() == 1;
         }
     }

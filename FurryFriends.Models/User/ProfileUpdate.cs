@@ -10,10 +10,9 @@ namespace FurryFriends.Models.User
     public class ProfileUpdate
     {
     public int Id { get; set; }
+    public int OwnerId { get; set; }
     public string Name { get; set; }
     public int Age { get; set; }
-    public string Email { get; set; }
-    public string Username { get; set; }
     public string Bio { get; set; }
     public int Size { get; set; }
     public int PetType { get; set; }     

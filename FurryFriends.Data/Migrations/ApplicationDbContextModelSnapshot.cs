@@ -119,6 +119,8 @@ namespace FurryFriends.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OwnerId");
+
                     b.ToTable("Profiles");
                 });
 
@@ -199,6 +201,17 @@ namespace FurryFriends.Data.Migrations
                 });
 
             modelBuilder.Entity("FurryFriends.Data.Entities.PostEntity", b =>
+                {
+                    b.HasOne("FurryFriends.Data.Entities.UserEntity", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("FurryFriends.Data.Entities.ProfileEntity", b =>
                 {
                     b.HasOne("FurryFriends.Data.Entities.UserEntity", "Owner")
                         .WithMany()
