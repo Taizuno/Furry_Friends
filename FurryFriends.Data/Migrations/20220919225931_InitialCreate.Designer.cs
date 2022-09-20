@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FurryFriends.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220919195428_InitialCreate")]
+    [Migration("20220919225931_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -121,6 +121,8 @@ namespace FurryFriends.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OwnerId");
+
                     b.ToTable("Profiles");
                 });
 
@@ -201,6 +203,17 @@ namespace FurryFriends.Data.Migrations
                 });
 
             modelBuilder.Entity("FurryFriends.Data.Entities.PostEntity", b =>
+                {
+                    b.HasOne("FurryFriends.Data.Entities.UserEntity", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("FurryFriends.Data.Entities.ProfileEntity", b =>
                 {
                     b.HasOne("FurryFriends.Data.Entities.UserEntity", "Owner")
                         .WithMany()

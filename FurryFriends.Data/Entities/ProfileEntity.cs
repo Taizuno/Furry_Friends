@@ -12,8 +12,9 @@ namespace FurryFriends.Data.Entities
         [Key]
         public int Id { get; set; }
 
-        [ForeignKey("User")]
+        [ForeignKey("Owner")]
         public int OwnerId { get; set; }
+        public virtual UserEntity Owner { get; set; }
         public string Name { get; set; }
         public string Bio { get; set; }
         public int Age { get; set; }

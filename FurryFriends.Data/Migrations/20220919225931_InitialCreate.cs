@@ -10,33 +10,6 @@ namespace FurryFriends.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Profiles",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OwnerId = table.Column<int>(type: "int", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Age = table.Column<int>(type: "int", nullable: false),
-                    Size = table.Column<int>(type: "int", nullable: false),
-                    PetType = table.Column<int>(type: "int", nullable: false),
-                    BreedId = table.Column<int>(type: "int", nullable: false),
-                    CityID = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Profiles", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Profiles_User_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-        
-                });
-
-            migrationBuilder.CreateTable(
                 name: "User",
                 columns: table => new
                 {
@@ -70,6 +43,32 @@ namespace FurryFriends.Data.Migrations
                     table.PrimaryKey("PK_Post", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Post_User_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Profiles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    OwnerId = table.Column<int>(type: "int", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Bio = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Age = table.Column<int>(type: "int", nullable: false),
+                    Size = table.Column<int>(type: "int", nullable: false),
+                    PetType = table.Column<int>(type: "int", nullable: false),
+                    BreedId = table.Column<int>(type: "int", nullable: false),
+                    CityID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Profiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Profiles_User_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "User",
                         principalColumn: "Id",
@@ -129,6 +128,11 @@ namespace FurryFriends.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Post_OwnerId",
                 table: "Post",
+                column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Profiles_OwnerId",
+                table: "Profiles",
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(

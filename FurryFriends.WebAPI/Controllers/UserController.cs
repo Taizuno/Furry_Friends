@@ -67,10 +67,9 @@ namespace FurryFriends.WebAPI.Controllers
             return Ok(petProfiles);
         }
 
-        [Authorize]
         [HttpGet("ByLocation")]
 
-        public async Task<IActionResult> ViewProfileByLocation([FromBody] int CityID)
+        public async Task<IActionResult> ViewProfileByLocation([FromForm] int CityID)
         {
             var petProfile = _userService.GetProfileByLocation(CityID);
 
@@ -81,10 +80,9 @@ namespace FurryFriends.WebAPI.Controllers
             return Ok(petProfile);
         }
 
-        [Authorize]
-        [HttpGet("AnimalType")]
+        [HttpGet("ByAnimalType")]
 
-        protected async Task<IActionResult> ViewProfileByAnimalType([FromBody] int PetType)
+        public async Task<IActionResult> ViewProfileByAnimalType([FromForm] int PetType)
         {
             var petProfile = _userService.GetProfileByAnimalType(PetType);
 
@@ -95,10 +93,9 @@ namespace FurryFriends.WebAPI.Controllers
             return Ok(petProfile);
         }
 
-        [Authorize]
-        [HttpGet("AnimalType")]
+        [HttpGet("ByBreed")]
 
-        public async Task<IActionResult> ViewProfileBreed([FromBody] int BreedId)
+        public async Task<IActionResult> ViewProfileBreed([FromForm] int BreedId)
         {
             var petProfile = _userService.GetProfileByBreed(BreedId);
 
@@ -109,12 +106,11 @@ namespace FurryFriends.WebAPI.Controllers
             return Ok(petProfile);
         }
 
-        [Authorize]
         [HttpGet("BySize")]
 
-        public async Task<IActionResult> ViewProfileBySize([FromBody] int Size)
+        public async Task<IActionResult> ViewProfileBySize([FromForm] int Size)
         {
-            var petProfile = _userService.GetProfileByBreed(Size);
+            var petProfile = _userService.GetProfileBySize(Size);
 
             if (petProfile is null)
             {
@@ -122,10 +118,11 @@ namespace FurryFriends.WebAPI.Controllers
             }
             return Ok(petProfile);
         }
-        [Authorize]
+
+
         [HttpGet("AgeRange")]
 
-        public IActionResult ViewProfileByAge([FromBody] int UpperAge, int LowerAge)
+        public IActionResult ViewProfileByAge([FromForm] int UpperAge, int LowerAge)
         {
             var petProfile = _userService.GetProfileByAgeRange(UpperAge, LowerAge);
 
@@ -136,8 +133,8 @@ namespace FurryFriends.WebAPI.Controllers
             return Ok(petProfile);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> EditProfile([FromBody] ProfileUpdate request)
+        [HttpPut("Modify")]
+        public async Task<IActionResult> EditProfile([FromForm] ProfileUpdate request)
         {
             if (!ModelState.IsValid)
             {
@@ -147,10 +144,10 @@ namespace FurryFriends.WebAPI.Controllers
             return await _userService.UpdateAProfile(request) ? Ok(new Response<ProfileUpdate>(request)) : BadRequest(new Response<ProfileUpdate>(request));
         }
 
-        [HttpDelete]
-        public async Task<IActionResult> DeleteUser([FromRoute] int Id)
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> DeleteUser([FromForm] int Id)
         {
-            return await _userService.DeleteAUser(Id) ? Ok($"Post with the id:{Id} was deleted successfully.") : BadRequest($"Post with {Id} could not be deleted.");
+            return await _userService.DeleteAUser(Id) ? Ok($"User with the id:{Id} was deleted successfully.") : BadRequest($"User with id:{Id} could not be deleted.");
         }
     }
 }
