@@ -14,11 +14,11 @@ namespace FurryFriends.Models.Maps
 
 
             CreateMap<PostCreate, PostEntity>()
-                .ForMember(post => post.DateTimeCreated, opt => opt.MapFrom(src => DateTimeOffset.Now));
+                .ForMember(post => post.DateTimeCreated, opt => opt.MapFrom(src => DateTime.Now));
 
 
             CreateMap<PostUpdate, PostEntity>()
-                .ForMember(post => post.DateTimeUpdated, opt => opt.MapFrom(src => DateTimeOffset.Now));
+                .ForMember(post => post.DateTimeUpdated, opt => opt.MapFrom(src => DateTime.Now));
         }
     }
 }

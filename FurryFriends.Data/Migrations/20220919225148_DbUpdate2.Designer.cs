@@ -4,6 +4,7 @@ using FurryFriends.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FurryFriends.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220919225148_DbUpdate2")]
+    partial class DbUpdate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,9 +38,6 @@ namespace FurryFriends.Data.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RelatedPostId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -49,7 +48,7 @@ namespace FurryFriends.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RelatedPostId");
+                    b.HasIndex("PostId");
 
                     b.ToTable("Comment");
                 });
@@ -80,6 +79,8 @@ namespace FurryFriends.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Post");
                 });
@@ -150,6 +151,8 @@ namespace FurryFriends.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CommentId");
+
                     b.ToTable("Reply");
                 });
 
@@ -190,11 +193,33 @@ namespace FurryFriends.Data.Migrations
                 {
                     b.HasOne("FurryFriends.Data.Entities.PostEntity", "RelatedPost")
                         .WithMany()
-                        .HasForeignKey("RelatedPostId")
+                        .HasForeignKey("PostId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("RelatedPost");
+                });
+
+            modelBuilder.Entity("FurryFriends.Data.Entities.PostEntity", b =>
+                {
+                    b.HasOne("FurryFriends.Data.Entities.UserEntity", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("FurryFriends.Data.Entities.ReplyEntity", b =>
+                {
+                    b.HasOne("FurryFriends.Data.Entities.CommentEntity", "Comment")
+                        .WithMany()
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
                 });
 #pragma warning restore 612, 618
         }

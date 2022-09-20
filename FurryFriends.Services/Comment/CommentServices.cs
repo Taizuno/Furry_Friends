@@ -29,8 +29,8 @@ namespace FurryFriends.Services.Comment
                 Text = model.Text,
                 UserName = model.UserName,
                 DateTimeCreated = DateTime.Now,
-                PostId = model.PostId,
-                RelatedPost = model.RelatedPost
+                PostId = model.PostId
+
             };
 
             _DbContext.Comment.Add(entity);
@@ -43,16 +43,16 @@ namespace FurryFriends.Services.Comment
             var comment = await _DbContext.Comment.FirstOrDefaultAsync(e => e.Id == commentId);
 
             return _mapper.Map<CommentListItem>(comment);
-            
+
         }
         public async Task<List<CommentListItem>> GetCommentsbyUserNameAsync(string Username)
         {
             var comments = _DbContext.Comment.Select(entity => _mapper.Map<CommentListItem>(entity));
 
             List<CommentListItem> list = new List<CommentListItem>();
-            foreach(CommentListItem x in comments)
+            foreach (CommentListItem x in comments)
             {
-                if(x.UserName == Username)
+                if (x.UserName == Username)
                 {
                     list.Add(x);
                 }
@@ -60,19 +60,11 @@ namespace FurryFriends.Services.Comment
 
             return list;
         }
-        
+
         public async Task<bool> UpdateCommentAsync(CommentUpdate request)
         {
-            var commentUserCheck = await _DbContext.Comment.AnyAsync(comment => comment.Id == request.Id && comment.PostId == _postID);
 
-            if (!commentUserCheck)
-            {
-                return false;
-            }
-
-            var updatedComment = _mapper.Map<CommentUpdate, CommentEntity>(request, opt => opt.AfterMap((src, dest) => dest.PostId = _postID));
-            _DbContext.Entry(updatedComment).State = EntityState.Modified;
-            _DbContext.Entry(updatedComment).Property(e => e.DateTimeCreated).IsModified = false;
+            var updatedComment = _mapper.Map<CommentUpdate, CommentEntity>(request);
             var numberOfChanges = await _DbContext.SaveChangesAsync();
 
             return numberOfChanges == 1;

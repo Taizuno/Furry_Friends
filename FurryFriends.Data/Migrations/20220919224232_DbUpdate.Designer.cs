@@ -4,6 +4,7 @@ using FurryFriends.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FurryFriends.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220919224232_DbUpdate")]
+    partial class DbUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,9 +38,6 @@ namespace FurryFriends.Data.Migrations
                     b.Property<int>("PostId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RelatedPostId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Text")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -49,9 +48,7 @@ namespace FurryFriends.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RelatedPostId");
 
-                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("FurryFriends.Data.Entities.PostEntity", b =>
@@ -81,7 +78,7 @@ namespace FurryFriends.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Post");
+
                 });
 
             modelBuilder.Entity("FurryFriends.Data.Entities.ProfileEntity", b =>
@@ -120,7 +117,7 @@ namespace FurryFriends.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profiles");
+
                 });
 
             modelBuilder.Entity("FurryFriends.Data.Entities.ReplyEntity", b =>
@@ -150,7 +147,7 @@ namespace FurryFriends.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Reply");
+
                 });
 
             modelBuilder.Entity("FurryFriends.Data.Entities.UserEntity", b =>
@@ -183,19 +180,10 @@ namespace FurryFriends.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("User");
+
                 });
 
-            modelBuilder.Entity("FurryFriends.Data.Entities.CommentEntity", b =>
-                {
-                    b.HasOne("FurryFriends.Data.Entities.PostEntity", "RelatedPost")
-                        .WithMany()
-                        .HasForeignKey("RelatedPostId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
 
-                    b.Navigation("RelatedPost");
-                });
 #pragma warning restore 612, 618
         }
     }

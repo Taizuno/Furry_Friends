@@ -17,19 +17,21 @@ namespace FurryFriends.Services.Reply
         private readonly ApplicationDbContext _DbContext;
         public ReplyServices(IHttpContextAccessor httpContextAccessor, IMapper mapper, ApplicationDbContext DbContext)
         {
-            var userClaims = httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
-            var value = userClaims.FindFirst("Id")?.Value;
-            var validId = int.TryParse(value, out _commentId);
-            if (!validId)
-                throw new Exception("Attempted to build ReplyService without User Id claim.");
+            //User claims
+            // var userClaims = httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
+            // var value = userClaims.FindFirst("Id")?.Value;
+            // var validId = int.TryParse(value, out _commentId);
+            // if (!validId)
+            //     throw new Exception("Attempted to build ReplyService without User Id claim.");
             _mapper = mapper;
             _DbContext = DbContext;
         }
 
         public async Task<bool> CreateReplyAsync(ReplyCreate model)
         {
-            var replyEntity = _mapper.Map<ReplyCreate, ReplyEntity>(model, opt =>
-            opt.AfterMap((src, dest) => dest.CommentId = _commentId));
+            // var replyEntity = _mapper.Map<ReplyCreate, ReplyEntity>(model, opt =>
+            // opt.AfterMap((src, dest) => dest.CommentId = _commentId));
+            var replyEntity = _mapper.Map<ReplyCreate, ReplyEntity>(model);
 
 
             _DbContext.Reply.Add(replyEntity);
@@ -66,13 +68,13 @@ namespace FurryFriends.Services.Reply
 
         public async Task<bool> UpdateReplyAsync(ReplyUpdate request)
         {
-            var replyIsUserOwned = await _DbContext.Reply.AnyAsync(reply =>
-    reply.Id == request.Id && reply.CommentId == _commentId);
-            if (!replyIsUserOwned)
-                return false;
-
-            var updatedReply = _mapper.Map<ReplyUpdate, ReplyEntity>(request, opt =>
-            opt.AfterMap((src, dest) => dest.CommentId = _commentId));
+            //         var replyIsUserOwned = await _DbContext.Reply.AnyAsync(reply =>
+            // reply.Id == request.Id && reply.CommentId == _commentId);
+            //         if (!replyIsUserOwned)
+            //             return false;
+            // var updatedReply = _mapper.Map<ReplyUpdate, ReplyEntity>(request, opt =>
+            //             opt.AfterMap((src, dest) => dest.CommentId = _commentId));
+            var updatedReply = _mapper.Map<ReplyUpdate, ReplyEntity>(request);
             _DbContext.Entry(updatedReply).State = EntityState.Modified;
             _DbContext.Entry(updatedReply).Property(e => e.DateTimeCreated).IsModified = false;
             var numberOfChanges = await _DbContext.SaveChangesAsync();
