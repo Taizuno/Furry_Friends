@@ -5,6 +5,8 @@ using FurryFriends.Services.Post;
 using FurryFriends.Services.Reply;
 using FurryFriends.Services.Token;
 using FurryFriends.Services.User;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -35,7 +37,6 @@ builder.Services.AddSwaggerGen(options =>
 {
     options.CustomSchemaIds(type => type.ToString());
 });
-
 
 var app = builder.Build();
 
