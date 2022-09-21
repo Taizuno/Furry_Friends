@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FurryFriends.WebAPI.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class PostController : ControllerBase
     {
         private readonly IPostServices _postServices;
@@ -16,11 +18,13 @@ namespace FurryFriends.WebAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<PostCreate>), 200)]
         public async Task<IActionResult> CreatePost([FromBody] PostCreate request)
         {
+
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             if (await _postServices.CreatePostAsync(request))
                 return Ok("Post created successfully.");
+
 
             return BadRequest("Post could not be created");
 
@@ -51,7 +55,7 @@ namespace FurryFriends.WebAPI.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return await _postServices.UpdatePostAsync(request) ? Ok(new Response<PostUpdate>(request)) : BadRequest(new Response<PostUpdate>(request));
+            return await _postServices.UpdatePostAsync(request) ? Ok() : BadRequest();
         }
 
 

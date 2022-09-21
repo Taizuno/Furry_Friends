@@ -11,8 +11,9 @@ namespace FurryFriends.Data.Entities
         public string UserName { get; set; }
         public DateTime DateTimeCreated { get; set; }
         public DateTime DateTimeUpdated { get; set; }
-        [ForeignKey("Owner")]
+
         public int OwnerId { get; set; }
         public UserEntity Owner { get; set; }
+        public CommentEntity Comments { get; set; }
     }
 }

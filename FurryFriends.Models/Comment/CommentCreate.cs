@@ -12,10 +12,9 @@ namespace FurryFriends.Models.Comment
         [Required]
         public string UserName { get; set; }
         [Required]
-         public int PostId { get; set; }
-         [Required]
-         public DateTime DateTimeCreated { get; set; }
-         [Required]
-        public PostEntity RelatedPost { get; set; }
+        public int PostId { get; set; }
+        [Required]
+        public DateTime DateTimeCreated { get; set; }
+
     }
 }

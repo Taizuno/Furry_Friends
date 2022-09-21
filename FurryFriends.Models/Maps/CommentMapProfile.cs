@@ -15,7 +15,7 @@ namespace FurryFriends.Models.Maps
 
 
             CreateMap<CommentCreate, CommentEntity>()
-                .ForMember(post => post.DateTimeCreated, opt => opt.MapFrom(src => DateTimeOffset.Now));
+                .ForMember(post => post.DateTimeCreated, opt => opt.MapFrom(src => DateTime.Now));
 
 
             CreateMap<CommentUpdate, CommentEntity>();

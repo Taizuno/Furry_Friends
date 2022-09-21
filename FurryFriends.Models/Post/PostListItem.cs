@@ -1,3 +1,5 @@
+using FurryFriends.Data.Entities;
+
 namespace FurryFriends.Models.Post
 {
     public class PostListItem
@@ -10,5 +12,6 @@ namespace FurryFriends.Models.Post
         public DateTime DateTimeUpdated { get; set; }
 
         public int OwnerId { get; set; }
+        public CommentEntity Comments { get; set; }
     }
 }

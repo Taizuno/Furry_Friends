@@ -17,19 +17,20 @@ namespace FurryFriends.Services.Post
         private readonly ApplicationDbContext _DbContext;
         public PostServices(IHttpContextAccessor httpContextAccessor, IMapper mapper, ApplicationDbContext DbContext)
         {
-            var userClaims = httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
-            var value = userClaims.FindFirst("Id")?.Value;
-            var validId = int.TryParse(value, out _userId);
-            if (!validId)
-                throw new Exception("Attempted to build PostService without User Id claim.");
+            // var userClaims = httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
+            // var value = userClaims.FindFirst("Id")?.Value;
+            // var validId = int.TryParse(value, out _userId);
+            // if (!validId)
+            //     throw new Exception("Attempted to build PostService without User Id claim.");
             _mapper = mapper;
             _DbContext = DbContext;
         }
 
         public async Task<bool> CreatePostAsync(PostCreate model)
         {
-            var postEntity = _mapper.Map<PostCreate, PostEntity>(model, opt =>
-            opt.AfterMap((src, dest) => dest.OwnerId = _userId));
+            // var postEntity = _mapper.Map<PostCreate, PostEntity>(model, opt =>
+            // opt.AfterMap((src, dest) => dest.OwnerId = _userId));
+            var postEntity = _mapper.Map<PostCreate, PostEntity>(model);
 
 
             _DbContext.Post.Add(postEntity);
@@ -41,7 +42,8 @@ namespace FurryFriends.Services.Post
         public async Task<PostListItem> GetPostByIdAsync(int postId)
         {
             var postToUser = await _DbContext.Post
-                .FirstOrDefaultAsync(e => e.Id == postId && e.OwnerId == _userId);
+            .Include(r => r.Comments)
+            .FirstOrDefaultAsync(e => e.Id == postId);
 
             return postToUser is null ? null : _mapper.Map<PostListItem>(postToUser);
 
@@ -50,7 +52,6 @@ namespace FurryFriends.Services.Post
         public async Task<IEnumerable<PostListItem>> GetAllPostsAsync(PaginationFilter _filter, HttpContext httpContext)
         {
             var posts = _DbContext.Post
-                .Where(entity => entity.OwnerId == _userId)
                 .OrderBy(p => p.Id)
                 .Select(entity => _mapper.Map<PostListItem>(entity));
 
@@ -68,12 +69,11 @@ namespace FurryFriends.Services.Post
         public async Task<bool> UpdatePostAsync(PostUpdate request)
         {
             var postIsUserOwned = await _DbContext.Post.AnyAsync(post =>
-    post.Id == request.Id && post.OwnerId == _userId);
+    post.Id == request.Id);
             if (!postIsUserOwned)
                 return false;
 
-            var newPost = _mapper.Map<PostUpdate, PostEntity>(request, opt =>
-            opt.AfterMap((src, dest) => dest.OwnerId = _userId));
+            var newPost = _mapper.Map<PostUpdate, PostEntity>(request);
             _DbContext.Entry(newPost).State = EntityState.Modified;
             _DbContext.Entry(newPost).Property(e => e.DateTimeCreated).IsModified = false;
             var numberOfChanges = await _DbContext.SaveChangesAsync();
